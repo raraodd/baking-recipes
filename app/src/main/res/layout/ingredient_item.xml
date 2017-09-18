@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/margin_small">
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:paddingRight="@dimen/padding_extra_small"
+        android:src="@drawable/ic_food"/>
+
+    <TextView
+        android:id="@+id/tv_ingredient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:layout_toRightOf="@id/iv_logo"
+        android:padding="@dimen/padding_extra_small"
+        android:layout_centerVertical="true"
+        android:textSize="@dimen/text_size_medium"
+        tools:text="5.0 Nutella or other chocolate-hazelnut spread"/>
+
+</RelativeLayout>
