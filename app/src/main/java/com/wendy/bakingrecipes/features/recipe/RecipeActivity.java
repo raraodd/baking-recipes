@@ -3,6 +3,10 @@ package com.wendy.bakingrecipes.features.recipe;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.wendy.bakingrecipes.Constant;
 import com.wendy.bakingrecipes.R;
+import com.wendy.bakingrecipes.SimpleIdlingResource;
 import com.wendy.bakingrecipes.features.recipedetail.RecipeDetailsActivity;
 import com.wendy.bakingrecipes.util.PreferenceUtil;
 
@@ -29,6 +34,19 @@ public class RecipeActivity extends AppCompatActivity
     private static final int PHONE_LANDSCAPE_COLUMN = 2;
     private static final int TABLET_PORTRAIT_COLUMN = 2;
     private static final int TABLET_LANDSCAPE_COLUMN = 3;
+
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
