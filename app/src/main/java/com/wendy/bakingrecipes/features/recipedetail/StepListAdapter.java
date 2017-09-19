@@ -51,7 +51,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.StepVi
         }
 
         void bind(Step step) {
-            tvStepId.setText("STEP " + (step.id+1));
+            tvStepId.setText("STEP " + step.id);
             tvShortDescription.setText(step.shortDescription);
         }
 

@@ -1,5 +1,7 @@
 package com.wendy.bakingrecipes.data;
 
+import com.wendy.bakingrecipes.service.BakingRecipesApp;
+
 import java.util.List;
 
 /**
@@ -23,5 +25,9 @@ public class Recipe {
         this.name = name;
         this.servings = servings;
         this.image = image;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return BakingRecipesApp.getInstance().getIngredients(id);
     }
 }

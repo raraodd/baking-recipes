@@ -3,8 +3,8 @@
     package="com.wendy.bakingrecipes">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -17,16 +17,43 @@
         <activity android:name=".features.recipe.RecipeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".features.recipedetail.RecipeDetailsActivity"></activity>
+        <activity
+            android:name=".features.recipedetail.RecipeDetailsActivity"
+            android:parentActivityName=".features.recipe.RecipeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".features.recipe.RecipeActivity" />
+        </activity>
+        <activity
+            android:name=".features.recipedetail.recipestep.RecipeStepActivity"
+            android:parentActivityName=".features.recipedetail.RecipeDetailsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".features.recipedetail.RecipeDetailsActivity" />
+        </activity>
 
         <provider
-            android:name="com.wendy.bakingrecipes.data.database.RecipeContentProvider"
+            android:name=".data.database.RecipeContentProvider"
             android:authorities="com.wendy.bakingrecipes"
-            android:exported="true"/>
+            android:exported="true" />
 
+        <receiver android:name=".RecipeWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/recipe_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".service.IngredientListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

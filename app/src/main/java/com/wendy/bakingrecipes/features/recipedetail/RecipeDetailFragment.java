@@ -61,8 +61,8 @@ public class RecipeDetailFragment extends Fragment implements StepListAdapter.St
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
-        ButterKnife.bind(this, view);
+        final View rootView = inflater.inflate(R.layout.fragment_recipe_detail, container, false);
+        ButterKnife.bind(this, rootView);
 
         Context context = getActivity();
 
@@ -81,7 +81,7 @@ public class RecipeDetailFragment extends Fragment implements StepListAdapter.St
         stepListAdapter.setSteps(getStep());
         rvSteps.setAdapter(stepListAdapter);
 
-        return view;
+        return rootView;
     }
 
     private List<Ingredient> getIngredient() {

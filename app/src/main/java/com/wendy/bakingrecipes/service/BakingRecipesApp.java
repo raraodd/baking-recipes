@@ -114,8 +114,8 @@ public class BakingRecipesApp {
         contentValues.put(StepContract.StepEntry._ID, step.id);
         contentValues.put(StepContract.StepEntry.COLUMN_RECIPE_ID, recipeId);
         contentValues.put(StepContract.StepEntry.COLUMN_SHORT_DESCRIPTION, step.shortDescription);
-        contentValues.put(StepContract.StepEntry.COLUMN_DESCRIPTION, "");
-        contentValues.put(StepContract.StepEntry.COLUMN_VIDEO_URL, "");
+        contentValues.put(StepContract.StepEntry.COLUMN_DESCRIPTION, step.description);
+        contentValues.put(StepContract.StepEntry.COLUMN_VIDEO_URL, step.videoURL);
         contentValues.put(StepContract.StepEntry.COLUMN_THUMBNAIL_URL, step.thumbnailURL);
 
         Uri uri = App.getContext().getContentResolver().insert(StepContract.StepEntry.CONTENT_URI, contentValues);
@@ -167,5 +167,18 @@ public class BakingRecipesApp {
                 mSelectionArgs,
                 StepContract.StepEntry._ID);
         return DbUtils.convertStepsCursorToList(cursor);
+    }
+
+    public Step getStepsById(Long recipeId, int stepId) {
+        String mSelection = "recipe_id = ? AND _id = ?";
+        String[] mSelectionArgs = new String[]{String.valueOf(recipeId), String.valueOf(stepId)};
+        Cursor cursor = App.getContext().getContentResolver().query(
+                StepContract.StepEntry.CONTENT_URI,
+                null,
+                mSelection,
+                mSelectionArgs,
+                StepContract.StepEntry._ID);
+        List<Step> steps = DbUtils.convertStepsCursorToList(cursor);
+        return steps.size() == 0 ? null : steps.get(0);
     }
 }

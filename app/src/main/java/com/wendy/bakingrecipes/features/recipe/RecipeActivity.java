@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import com.wendy.bakingrecipes.Constant;
 import com.wendy.bakingrecipes.R;
 import com.wendy.bakingrecipes.features.recipedetail.RecipeDetailsActivity;
+import com.wendy.bakingrecipes.util.PreferenceUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +45,14 @@ public class RecipeActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        viewModel.attach();
         loadRecipe();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        viewModel.detach();
     }
 
     public void setLayoutManager() {
@@ -68,6 +76,7 @@ public class RecipeActivity extends AppCompatActivity
     @Override
     public void updateRecipe() {
         recipeAdapter.setItems(viewModel.recipes);
+        recipeAdapter.notifyDataSetChanged();
     }
 
     private int getNumOfCol() {
@@ -84,6 +93,9 @@ public class RecipeActivity extends AppCompatActivity
     public void onRecipeClick(int clickedRecipeIndex) {
         Intent intent = new Intent(this, RecipeDetailsActivity.class);
         intent.putExtra(Constant.EXTRA_RECIPE_ID, viewModel.recipes.get(clickedRecipeIndex).id);
+        Long id = viewModel.recipes.get(clickedRecipeIndex).id;
+        PreferenceUtil.setSelectedRecipeId(this, id);
+
         startActivity(intent);
     }
 }

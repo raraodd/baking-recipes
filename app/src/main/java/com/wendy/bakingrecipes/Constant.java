@@ -17,4 +17,7 @@ public class Constant {
     public static final String RECIPE_CHEESECAKE = "Cheesecake";
 
     public static final String EXTRA_RECIPE_ID = "recipe_id";
+    public static final String EXTRA_STEP_SELECTED_ID = "step_selected_id";
+    public static final String EXTRA_STEPS_SIZE = "step_size";
+    public static final String EXTRA_TRACK_POSITION = "track_position";
 }

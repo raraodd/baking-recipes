@@ -6,4 +6,6 @@
     <color name="colorBackgroundRecipe">#FFFFFF</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorDisabled">#E0F7FA</color>
+    <color name="colorCardStep">#EF5350</color>
 </resources>
