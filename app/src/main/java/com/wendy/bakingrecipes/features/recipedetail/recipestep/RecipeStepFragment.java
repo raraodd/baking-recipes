@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -25,8 +26,10 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 import com.wendy.bakingrecipes.Constant;
 import com.wendy.bakingrecipes.R;
+import com.wendy.bakingrecipes.data.Recipe;
 import com.wendy.bakingrecipes.data.Step;
 import com.wendy.bakingrecipes.service.BakingRecipesApp;
 
@@ -48,6 +51,8 @@ public class RecipeStepFragment extends Fragment {
     TextView tvShortDescription;
     @BindView(R.id.step_exo_player_view)
     SimpleExoPlayerView playerView;
+    @BindView(R.id.iv_step_image)
+    ImageView ivStepImage;
     @Nullable
     @BindView(R.id.tv_step_description)
     TextView tvDescription;
@@ -143,6 +148,7 @@ public class RecipeStepFragment extends Fragment {
 
     private void initComponent() {
         step = BakingRecipesApp.getInstance().getStepsById(recipeId, stepId);
+        Recipe recipe = BakingRecipesApp.getInstance().getRecipeById(recipeId);
 
         if(tvStepId != null) {
             tvStepId.setText("Step " + stepId);
@@ -158,10 +164,30 @@ public class RecipeStepFragment extends Fragment {
             }
         }
 
-        if(step.videoURL.equals("")) {
-            playerView.setVisibility(View.GONE);
-        } else {
+        if(!step.videoURL.equals("")) {
             initializePlayer(Uri.parse(step.videoURL));
+        } else {
+            playerView.setVisibility(View.GONE);
+            ivStepImage.setVisibility(View.VISIBLE);
+            String imageURL = "";
+            if(!step.thumbnailURL.equals("")) {
+                imageURL = step.thumbnailURL;
+            } else if(!recipe.image.equals("")) {
+                imageURL = recipe.image;
+            }
+
+            if(!imageURL.equals("")) {
+                Picasso.with(getContext())
+                        .load(imageURL)
+                        .placeholder(R.drawable.ic_image)
+                        .into(ivStepImage);
+            } else {
+                Picasso.with(getContext())
+                        .load(getImageId(recipe.name))
+                        .placeholder(R.drawable.ic_image)
+                        .into(ivStepImage);
+            }
+
         }
     }
 
@@ -180,9 +206,6 @@ public class RecipeStepFragment extends Fragment {
         exoPlayer.prepare(mediaSource);
         exoPlayer.setPlayWhenReady(true);
         exoPlayer.seekTo(trackPosition);
-        Log.d("WENDY", "initializePlayer Track position: " + trackPosition);
-
-        //todo add position
     }
 
     private void releasePlayer() {
@@ -194,6 +217,21 @@ public class RecipeStepFragment extends Fragment {
             trackSelector = null;
         }
     }
+
+    private int getImageId(String name) {
+        switch (name) {
+            case Constant.RECIPE_BROWNIES:
+                return R.drawable.brownies;
+            case Constant.RECIPE_CHEESECAKE:
+                return R.drawable.cheesecake;
+            case Constant.RECIPE_NUTELLA_PIE:
+                return R.drawable.nutella_pie;
+            case Constant.RECIPE_YELLOW_CAKE:
+                return R.drawable.yellow_cake;
+        }
+        return 0;
+    }
+
     @Optional
     @OnClick(R.id.btn_prev)
     public void previousStep() {
