@@ -54,7 +54,7 @@ public class RecipeStepActivity extends AppCompatActivity implements RecipeStepF
             replaceFragment();
         }
 
-        setContentView(R.layout.activity_recipe_details);
+        setContentView(R.layout.activity_recipe_step);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

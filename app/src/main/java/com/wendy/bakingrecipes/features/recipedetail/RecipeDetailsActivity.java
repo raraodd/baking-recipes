@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -59,7 +60,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
 
         if(savedInstanceState == null) {
             replaceRecipeDetailFragment();
-            if (findViewById(R.id.recipe_step_content_view) != null) {
+            if (stepLinearLayout != null) {
                 isTwoPane = true;
             }
         }
@@ -97,6 +98,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
     @Override
     public void onStepClicked(int position) {
         stepSelectedId = position;
+        Log.d("WENDY", isTwoPane+"");
         if(isTwoPane) {
             replaceRecipeStepFragment();
         } else {
@@ -141,7 +143,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
 
     @Override
     public void onNext() {
-        if(stepSelectedId < viewModel.steps.size()-1) {
+        if(isTwoPane && stepSelectedId < viewModel.steps.size()-1) {
             stepSelectedId++;
             replaceRecipeStepFragment();
         }
@@ -149,7 +151,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
 
     @Override
     public void onPrev() {
-        if(stepSelectedId > 0) {
+        if(isTwoPane && stepSelectedId > 0) {
             stepSelectedId--;
             replaceRecipeStepFragment();
         }

@@ -93,7 +93,6 @@ public class RecipeStepFragment extends Fragment {
             stepId = savedInstanceState.getInt(Constant.EXTRA_STEP_SELECTED_ID);
             trackPosition = savedInstanceState.getLong(Constant.EXTRA_TRACK_POSITION);
             stepSize = savedInstanceState.getInt(Constant.EXTRA_STEPS_SIZE);
-            Log.d("WENDY", "savedInstanceState Track position: " + trackPosition);
         }
     }
 
@@ -104,7 +103,6 @@ public class RecipeStepFragment extends Fragment {
         outState.putInt(Constant.EXTRA_STEP_SELECTED_ID, stepId);
         outState.putInt(Constant.EXTRA_STEPS_SIZE, stepSize);
         outState.putLong(Constant.EXTRA_TRACK_POSITION, trackPosition);
-        Log.d("WENDY", "onSaveInstanceState Track position: " + trackPosition);
     }
 
     @Override
