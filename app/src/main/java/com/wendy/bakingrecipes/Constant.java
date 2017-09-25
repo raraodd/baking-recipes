@@ -20,4 +20,6 @@ public class Constant {
     public static final String EXTRA_STEP_SELECTED_ID = "step_selected_id";
     public static final String EXTRA_STEPS_SIZE = "step_size";
     public static final String EXTRA_TRACK_POSITION = "track_position";
+    public static final String EXTRA_FRAGMENT_DETAIL = "detail_fragment";
+    public static final String EXTRA_FRAGMENT_STEP = "step_fragment";
 }

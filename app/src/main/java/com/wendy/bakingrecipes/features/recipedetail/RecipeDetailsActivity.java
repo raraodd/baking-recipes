@@ -3,6 +3,7 @@ package com.wendy.bakingrecipes.features.recipedetail;
 import android.content.Intent;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +11,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.wendy.bakingrecipes.Constant;
 import com.wendy.bakingrecipes.R;
@@ -33,7 +33,10 @@ public class RecipeDetailsActivity extends AppCompatActivity
     private Long recipeId;
     private RecipeDetailsViewModel viewModel;
     private int stepSelectedId;
-    private boolean isTwoPane;
+    private boolean isTwoPane = false;
+
+    private RecipeStepFragment recipeStepFragment = new RecipeStepFragment();
+    private RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
 
     // for two pane
 
@@ -47,21 +50,73 @@ public class RecipeDetailsActivity extends AppCompatActivity
         Intent intent = getIntent();
         if(intent != null) {
             recipeId = intent.getLongExtra(Constant.EXTRA_RECIPE_ID, 0);
-        } else if(savedInstanceState != null) {
+        }
+        if(savedInstanceState != null) {
             recipeId = savedInstanceState.getLong(Constant.EXTRA_RECIPE_ID);
             stepSelectedId = savedInstanceState.getInt(Constant.EXTRA_STEP_SELECTED_ID);
         }
 
         viewModel = new RecipeDetailsViewModel(this, recipeId);
+        loadIngredients();
+        loadSteps();
+        getSupportActionBar().setTitle(viewModel.recipe.name);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        if(savedInstanceState == null) {
-            replaceRecipeDetailFragment();
-            if (stepLinearLayout != null) {
-                isTwoPane = true;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if (stepLinearLayout != null) {
+            isTwoPane = true;
+
+            if(savedInstanceState == null) {
+                recipeDetailFragment.setRecipeId(recipeId);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.recipe_detail_content_view, recipeDetailFragment)
+                        .commit();
+
+                recipeStepFragment.setRecipeId(recipeId);
+                recipeStepFragment.setStepId(stepSelectedId);
+                recipeStepFragment.setStepSize(viewModel.steps.size());
+                fragmentManager.beginTransaction()
+                        .replace(R.id.recipe_step_content_view, recipeStepFragment)
+                        .commit();
+            } else {
+                recipeDetailFragment = (RecipeDetailFragment)
+                        getSupportFragmentManager().getFragment(savedInstanceState, Constant.EXTRA_FRAGMENT_DETAIL);
+                recipeDetailFragment.setRecipeId(recipeId);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.recipe_detail_content_view, recipeDetailFragment)
+                        .commit();
+
+                recipeStepFragment = (RecipeStepFragment)
+                        fragmentManager.getFragment(savedInstanceState, Constant.EXTRA_FRAGMENT_STEP);
+                recipeStepFragment.setRecipeId(recipeId);
+                recipeStepFragment.setStepId(stepSelectedId);
+                recipeStepFragment.setStepSize(viewModel.steps.size());
+                fragmentManager.beginTransaction()
+                        .replace(R.id.recipe_step_content_view, recipeStepFragment)
+                        .commit();
+
+            }
+
+        } else {
+            isTwoPane = false;
+
+            if(savedInstanceState == null) {
+                recipeDetailFragment.setRecipeId(recipeId);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.recipe_detail_content_view, recipeDetailFragment)
+                        .commit();
+            }
+            else {
+                recipeDetailFragment = (RecipeDetailFragment)
+                        getSupportFragmentManager().getFragment(savedInstanceState, Constant.EXTRA_FRAGMENT_DETAIL);
+                recipeDetailFragment.setRecipeId(recipeId);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.recipe_detail_content_view, recipeDetailFragment)
+                        .commit();
             }
         }
 
@@ -70,21 +125,16 @@ public class RecipeDetailsActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        loadIngredients();
-        loadSteps();
-        getSupportActionBar().setTitle(viewModel.recipe.name);
-
-        replaceRecipeDetailFragment();
-        if(isTwoPane) {
-            replaceRecipeStepFragment();
-        }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putLong(Constant.EXTRA_RECIPE_ID, recipeId);
         outState.putInt(Constant.EXTRA_STEP_SELECTED_ID, stepSelectedId);
+        getSupportFragmentManager().putFragment(outState, Constant.EXTRA_FRAGMENT_DETAIL, recipeDetailFragment);
+        if(isTwoPane)
+            getSupportFragmentManager().putFragment(outState, Constant.EXTRA_FRAGMENT_STEP, recipeStepFragment);
     }
 
     @Override
@@ -98,7 +148,6 @@ public class RecipeDetailsActivity extends AppCompatActivity
     @Override
     public void onStepClicked(int position) {
         stepSelectedId = position;
-        Log.d("WENDY", isTwoPane+"");
         if(isTwoPane) {
             replaceRecipeStepFragment();
         } else {
@@ -120,7 +169,6 @@ public class RecipeDetailsActivity extends AppCompatActivity
     }
 
     public void replaceRecipeDetailFragment() {
-        RecipeDetailFragment recipeDetailFragment = new RecipeDetailFragment();
         recipeDetailFragment.setRecipeId(recipeId);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -130,7 +178,6 @@ public class RecipeDetailsActivity extends AppCompatActivity
     }
 
     public void replaceRecipeStepFragment() {
-        RecipeStepFragment recipeStepFragment = new RecipeStepFragment();
         recipeStepFragment.setRecipeId(recipeId);
         recipeStepFragment.setStepId(stepSelectedId);
         recipeStepFragment.setStepSize(viewModel.steps.size());
