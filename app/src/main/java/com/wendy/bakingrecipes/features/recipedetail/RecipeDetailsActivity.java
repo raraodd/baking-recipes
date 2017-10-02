@@ -178,6 +178,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
     }
 
     public void replaceRecipeStepFragment() {
+        recipeStepFragment = new RecipeStepFragment();
         recipeStepFragment.setRecipeId(recipeId);
         recipeStepFragment.setStepId(stepSelectedId);
         recipeStepFragment.setStepSize(viewModel.steps.size());
